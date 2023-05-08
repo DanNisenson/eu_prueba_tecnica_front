@@ -7,7 +7,11 @@
         width="300px"
         elevation="16"
       >
-        <Task v-for="task in tasks" :key="task.id" :text="task.title" />
+        <Task
+          v-for="task in tasksStore.tasks"
+          :key="task.id"
+          :text="task.title"
+        />
         <NewTask />
       </v-card>
     </v-sheet>
@@ -15,7 +19,8 @@
 </template>
 
 <script setup>
-const uri = "http://localhost:8080/v1/task";
-const { data } = await useFetch(uri);
-const tasks = data.value;
+import { useTasksStore } from "../stores/taskStore";
+
+const tasksStore = useTasksStore();
+tasksStore.setTasks();
 </script>
