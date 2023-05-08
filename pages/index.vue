@@ -1,17 +1,21 @@
 <template>
-  <v-app id="inspire">
-    <v-navigation-drawer model-value class="pt-4" color="grey-darken-4" rail>
-      <v-avatar
-        v-for="n in 6"
-        :key="n"
-        :color="`grey-${n === 1 ? 'darken' : 'lighten'}-1`"
-        :size="n === 1 ? 36 : 20"
-        class="d-block text-center mx-auto mb-9"
-      ></v-avatar>
-    </v-navigation-drawer>
-
-    <v-main>
-      <!--  -->
-    </v-main>
-  </v-app>
+  <v-container class="d-flex justify-center" fill-height>
+    <v-sheet color="transparent">
+      <v-card
+        color="grey-lighten-1 pa-2"
+        title="To-Do"
+        width="300px"
+        elevation="16"
+      >
+        <Task v-for="task in tasks" :key="task.id" :text="task.title" />
+        <NewTask />
+      </v-card>
+    </v-sheet>
+  </v-container>
 </template>
+
+<script setup>
+const uri = "http://localhost:8080/v1/task";
+const { data } = await useFetch(uri);
+const tasks = data.value;
+</script>
