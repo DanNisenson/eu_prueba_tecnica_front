@@ -16,11 +16,25 @@
       </v-card>
     </v-sheet>
   </v-container>
+  <v-alert
+    v-if="tasksStore.didFetchFail"
+    color="warning"
+    icon="$warning"
+    title="Connection error"
+    text="There's been a problem fetching your tasks. Make sure you're connected to the internet."
+  ></v-alert>
 </template>
 
 <script setup>
 import { useTasksStore } from "../stores/taskStore";
 
 const tasksStore = useTasksStore();
-tasksStore.setTasks();
+
+if (tasksStore.didFetchFail) {
+  setTimeout(() => {
+    tasksStore.resetDidFetchFail();
+  }, 5000);
+}
+
+tasksStore.getAllTasks();
 </script>
