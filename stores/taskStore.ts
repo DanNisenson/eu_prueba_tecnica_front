@@ -1,12 +1,5 @@
 import { defineStore } from "pinia";
-
-interface Task {
-  id?: number;
-  uuid?: string;
-  title: string;
-  color: string;
-  completed: boolean;
-}
+import { Task } from "~/types/Task";
 
 interface State {
   tasks: Task[];
