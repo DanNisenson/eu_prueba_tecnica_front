@@ -9,8 +9,9 @@
       >
         <Task
           v-for="task in tasksStore.tasks"
-          :key="task.id"
-          :text="task.title"
+          :key="task.uuid"
+          :title="task.title"
+          :uuid="task.uuid"
         />
         <NewTask />
       </v-card>

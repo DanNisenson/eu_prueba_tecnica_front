@@ -25,6 +25,7 @@ const opts = {
       didFetchFail: false,
     };
   },
+
   actions: {
     async getAllTasks() {
       const uri = "http://localhost:8080/v1/task";
@@ -59,6 +60,17 @@ const opts = {
       const { data } = await useFetch(uri, config);
 
       this.tasks = [...this.tasks, data.value];
+    },
+
+    async deleteTask(uuid: string) {
+      const uri = `http://localhost:8080/v1/task/${uuid}`;
+      const config: UseFetchOptions = {
+        method: "DELETE",
+      };
+
+      const { data } = await useFetch(uri, config);
+
+      this.tasks = this.tasks.filter((task: Task) => task.uuid !== uuid);
     },
   },
 };
