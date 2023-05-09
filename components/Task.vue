@@ -5,15 +5,17 @@
       :checked="props.task.completed"
       @click="toggleCompletion"
     />
-    <input
+    <textarea
       ref="input"
       v-model="newTitle"
       class="input"
       :class="props.task.completed && 'text-decoration-line-through'"
+      resize="false"
       @blur="titleChange"
       @keydown.enter="handleEnter"
       @dblclick="editTitle"
-    />
+      @input="autoResize"
+    ></textarea>
     <TrashIcon class="mr-2" @click="tasksStore.deleteTask(props.task.uuid)" />
   </v-card>
 </template>
@@ -39,6 +41,12 @@ const props = defineProps<Task>();
 let newTitle = props.task.title;
 const input = ref();
 const isEditTitle = ref(true);
+
+function autoResize() {
+  console.log("ok");
+  input.value.style.height = "auto";
+  input.value.style.height = input.value.scrollHeight + "px";
+}
 
 const editTitle = () => {
   isEditTitle.value = !isEditTitle.value;
@@ -72,5 +80,7 @@ const toggleCompletion = () => {
   cursor: pointer;
   outline: none;
   width: 100%;
+  resize: none;
+  height: 1.5rem;
 }
 </style>

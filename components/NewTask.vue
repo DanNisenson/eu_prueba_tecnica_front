@@ -14,7 +14,6 @@
     no-resize
     @keyup.enter="handlePrimaryAction"
   ></v-textarea>
-
   <v-btn
     class="mt-3 mb-1"
     rounded="s"
@@ -22,17 +21,18 @@
     elevation="1"
     color="grey-darken-2"
     @click="handlePrimaryAction"
-    >{{ btnState ? "Add" : "New" }}</v-btn
   >
+    {{ btnState ? "Add" : "New" }}
+  </v-btn>
   <v-btn
     v-if="btnState"
     class="mt-3 mb-1 mx-1"
-    rounded="s"
     color="grey-darken-1"
-    size="extra-small"
+    rounded="s"
     variant="text"
     @click="closeTextarea"
-    ><Xicon />
+  >
+    <Xicon />
   </v-btn>
 </template>
 

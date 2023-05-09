@@ -1,7 +1,6 @@
 <template>
   <v-container class="d-flex justify-center" fill-height>
     <v-card
-      class="d-flex flex-column list"
       color="grey-lighten-1 pa-2"
       title="To-Do"
       min-width="300px"
