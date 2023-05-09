@@ -1,6 +1,8 @@
 <template>
   <v-textarea
     v-if="btnState"
+    ref="textarea"
+    v-model.trim="title"
     class="mt-3 rounded-xl"
     clearable
     placeholder="Write here"
@@ -10,6 +12,7 @@
     bg-color="grey-lighten-2"
     auto-grow
     no-resize
+    @keyup.enter="handlePrimaryAction"
   ></v-textarea>
 
   <v-btn
@@ -34,16 +37,27 @@
 </template>
 
 <script>
+import { useTasksStore } from "../stores/taskStore";
+
 export default {
   data() {
     return {
       btnState: false,
+      title: "",
     };
   },
 
   methods: {
     handlePrimaryAction() {
-      !this.btnState ? this.openTextarea() : 0;
+      const tasksStore = useTasksStore();
+
+      if (!this.btnState) {
+        this.openTextarea();
+      } else {
+        tasksStore.addTask(this.title);
+        this.$refs.textarea.focus();
+        this.title = "";
+      }
     },
 
     openTextarea() {
