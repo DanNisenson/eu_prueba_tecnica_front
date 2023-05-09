@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import TrashIcon from "./TraschIcon.vue";
+import TrashIcon from "./icons/TraschIcon.vue";
 import { useTasksStore } from "../stores/taskStore";
 
 interface Title {

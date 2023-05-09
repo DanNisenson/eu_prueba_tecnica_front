@@ -32,14 +32,19 @@
     size="extra-small"
     variant="text"
     @click="closeTextarea"
-    ><Xicon
-  /></v-btn>
+    ><Xicon />
+  </v-btn>
 </template>
 
 <script>
+import Xicon from "./icons/Xicon.vue";
 import { useTasksStore } from "../stores/taskStore";
 
 export default {
+  components: {
+    Xicon,
+  },
+
   data() {
     return {
       btnState: false,
