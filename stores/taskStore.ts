@@ -72,6 +72,20 @@ const opts = {
 
       this.tasks = this.tasks.filter((task: Task) => task.uuid !== uuid);
     },
+
+    async updateTask(task: Task) {
+      const uri = `http://localhost:8080/v1/task/`;
+      const config: UseFetchOptions = {
+        method: "PATCH",
+        body: task,
+      };
+
+      const { data } = await useFetch(uri, config);
+
+      this.tasks = this.tasks.map((t: Task) =>
+        t.uuid === task.uuid ? data.value : t
+      );
+    },
   },
 };
 
