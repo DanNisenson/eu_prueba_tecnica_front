@@ -11,6 +11,7 @@
       class="input"
       :class="props.task.completed && 'text-decoration-line-through'"
       resize="false"
+      readonly
       @blur="titleChange"
       @keydown.enter="handleEnter"
       @dblclick="editTitle"
@@ -36,14 +37,15 @@ interface Task {
 }
 
 const tasksStore = useTasksStore();
-const props = defineProps<Task>();
+const props = withDefaults(defineProps<Task>(), {
+  task: { id: -1, uuid: "", title: "", color: "", completed: false },
+});
 // eslint-disable-next-line vue/no-setup-props-destructure
 let newTitle = props.task.title;
 const input = ref();
 const isEditTitle = ref(true);
 
 function autoResize() {
-  console.log("ok");
   input.value.style.height = "auto";
   input.value.style.height = input.value.scrollHeight + "px";
 }
