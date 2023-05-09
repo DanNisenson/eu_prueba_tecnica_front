@@ -1,29 +1,76 @@
 <template>
-  <v-card
-    class="d-flex align-center justify-space-between px-3 py-1 mt-3"
-    elevation="1"
-    color="grey-lighten-2"
-  >
-    <div>
-      <input id="scales" type="checkbox" :name="title" />
-      <label class="px-2" :for="title">{{ props.title }} </label>
-    </div>
-    <TrashIcon
-      class="text-h1 ml-auto"
-      @click="tasksStore.deleteTask(props.uuid)"
+  <v-card class="d-flex align-center justify-space-between py-2 mt-1">
+    <CheckboxCircle
+      class="checkbox"
+      :checked="props.task.completed"
+      @click="toggleCompletion"
     />
+    <input
+      ref="input"
+      v-model="newTitle"
+      class="input"
+      :class="props.task.completed && 'text-decoration-line-through'"
+      @blur="titleChange"
+      @keydown.enter="handleEnter"
+      @dblclick="editTitle"
+    />
+    <TrashIcon class="mr-2" @click="tasksStore.deleteTask(props.task.uuid)" />
   </v-card>
 </template>
 
 <script setup lang="ts">
 import TrashIcon from "./icons/TraschIcon.vue";
 import { useTasksStore } from "../stores/taskStore";
+import CheckboxCircle from "./icons/CheckboxCircle.vue";
 
-interface Title {
-  title: string;
-  uuid: string;
+interface Task {
+  task: {
+    id: number;
+    uuid: string;
+    title: string;
+    color: string;
+    completed: boolean;
+  };
 }
-const props = defineProps<Title>();
 
 const tasksStore = useTasksStore();
+const props = defineProps<Task>();
+// eslint-disable-next-line vue/no-setup-props-destructure
+let newTitle = props.task.title;
+const input = ref();
+const isEditTitle = ref(true);
+
+const editTitle = () => {
+  isEditTitle.value = !isEditTitle.value;
+};
+
+const handleEnter = () => {
+  input.value.blur();
+  titleChange();
+};
+
+const titleChange = () => {
+  const newTask = {
+    ...props.task,
+    title: newTitle,
+  };
+  tasksStore.updateTask(newTask);
+};
+
+const toggleCompletion = () => {
+  const newTask = {
+    ...props.task,
+    completed: !props.task.completed,
+  };
+  tasksStore.updateTask(newTask);
+};
 </script>
+
+<style>
+.input {
+  user-select: none;
+  cursor: pointer;
+  outline: none;
+  width: 100%;
+}
+</style>

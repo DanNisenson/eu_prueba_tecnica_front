@@ -1,21 +1,17 @@
 <template>
   <v-container class="d-flex justify-center" fill-height>
-    <v-sheet color="transparent">
-      <v-card
-        color="grey-lighten-1 pa-2"
-        title="To-Do"
-        width="300px"
-        elevation="16"
-      >
-        <Task
-          v-for="task in tasksStore.tasks"
-          :key="task.uuid"
-          :title="task.title"
-          :uuid="task.uuid"
-        />
-        <NewTask />
-      </v-card>
-    </v-sheet>
+    <v-card
+      class="d-flex flex-column list"
+      color="grey-lighten-1 pa-2"
+      title="To-Do"
+      min-width="300px"
+      max-width="1000px"
+      width="70%"
+      elevation="16"
+    >
+      <Task v-for="task in tasksStore.tasks" :key="task.uuid" :task="task" />
+      <NewTask />
+    </v-card>
   </v-container>
   <v-alert
     v-if="tasksStore.didFetchFail"
