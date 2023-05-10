@@ -7,7 +7,7 @@
     />
     <v-textarea
       v-if="isEditTitle"
-      ref="input"
+      ref="textarea"
       v-model="newTitle"
       class="task-textarea"
       :class="props.task.completed && 'done-task'"
@@ -22,13 +22,12 @@
     <div v-else class="task-text" :class="props.task.completed && 'done-task'">
       {{ newTitle }}
     </div>
-
-    <TrashIcon class="mr-2" @click="isEditTitle = !isEditTitle" />
+    <MoreIcon class="mr-2" @click="openTaskActions" />
   </v-card>
 </template>
 
 <script setup lang="ts">
-import TrashIcon from "./icons/TraschIcon.vue";
+import MoreIcon from "./icons/MoreIcon.vue";
 import { useTasksStore } from "../stores/taskStore";
 import CheckboxCircle from "./icons/CheckboxCircle.vue";
 
@@ -48,15 +47,17 @@ const props = withDefaults(defineProps<Task>(), {
 });
 // eslint-disable-next-line vue/no-setup-props-destructure
 let newTitle = props.task.title;
-const input = ref();
+const textarea = ref();
 const isEditTitle = ref(false);
 
-const editTitle = () => {
-  isEditTitle.value = !isEditTitle.value;
+const openTaskActions = () => {
+  isEditTitle.value = true;
+  textarea.value.focus();
+  textarea.value.select();
 };
 
 const handleEnter = () => {
-  input.value.blur();
+  textarea.value.blur();
   titleChange();
 };
 
