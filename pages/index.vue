@@ -30,7 +30,7 @@
     color="warning"
     icon="$warning"
     title="Connection error"
-    text="There's been a problem fetching your tasks. Make sure you're connected to the internet."
+    :text="tasksStore.didFetchFail"
   ></v-alert>
 </template>
 

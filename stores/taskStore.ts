@@ -3,7 +3,7 @@ import { Task } from "~/types/Task";
 
 interface State {
   tasks: Task[];
-  didFetchFail: boolean;
+  didFetchFail: string;
 }
 
 interface UseFetchOptions {
@@ -15,17 +15,18 @@ const opts = {
   state: (): State => {
     return {
       tasks: [],
-      didFetchFail: false,
+      didFetchFail: "",
     };
   },
 
   actions: {
     async getAllTasks() {
       const uri = "http://localhost:8080/v1/task/all";
-      const { data } = await useFetch(uri);
-
-      if (!data.value) {
-        this.didFetchFail = true;
+      const { data, error } = await useFetch(uri);
+      if (error.value) {
+        const msg =
+          "There's been a problem fetching your tasks. Make sure you're connected to the internet.";
+        this.setFailAlert(msg);
         return;
       }
 
@@ -47,7 +48,8 @@ const opts = {
       };
 
       const uri = "http://localhost:8080/v1/task";
-      const { data } = await useFetch(uri, config);
+      const { data, error } = await useFetch(uri, config);
+      if (error) this.didFetchFail = true;
 
       this.tasks = [...this.tasks, data.value];
     },
@@ -58,7 +60,13 @@ const opts = {
         method: "DELETE",
       };
 
-      const { data } = await useFetch(uri, config);
+      const { error } = await useFetch(uri, config);
+      if (error.value) {
+        const msg =
+          "There's been a problem deleting your task. Check your internet connection.";
+        this.setFailAlert(msg);
+        return;
+      }
 
       this.tasks = this.tasks.filter((task: Task) => task.uuid !== uuid);
     },
@@ -70,7 +78,13 @@ const opts = {
         body: task,
       };
 
-      const { data } = await useFetch(uri, config);
+      const { data, error } = await useFetch(uri, config);
+      if (error.value) {
+        const msg =
+          "There's been a problem updating your task. Check your internet connection.";
+        this.setFailAlert(msg);
+        return;
+      }
 
       this.tasks = this.tasks.map((t: Task) =>
         t.uuid === task.uuid ? data.value : t
@@ -85,6 +99,16 @@ const opts = {
       };
 
       const { error } = await useFetch(uri, config);
+      if (error.value) {
+        const msg =
+          "There's been a problem updating your tasks. Check your internet connection.";
+        this.setFailAlert(msg);
+        return;
+      }
+    },
+
+    setFailAlert(msg: string) {
+      this.didFetchFail = msg;
     },
   },
 };
