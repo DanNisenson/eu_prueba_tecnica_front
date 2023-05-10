@@ -1,5 +1,5 @@
 <template>
-  <svg-icon class="icon" height="1rem" type="mdi" :path="path"></svg-icon>
+  <svg-icon class="icon" height="1.3rem" type="mdi" :path="path"></svg-icon>
 </template>
 
 <script>

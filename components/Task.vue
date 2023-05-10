@@ -19,17 +19,26 @@
       @blur="titleChange"
       @keydown.enter="handleEnter"
     ></v-textarea>
-    <div v-else class="task-text" :class="props.task.completed && 'done-task'">
+    <div
+      v-else
+      class="task-text text-body-1"
+      :class="props.task.completed && 'done-task'"
+    >
       {{ newTitle }}
     </div>
-    <MoreIcon class="mr-2" @click="openTaskActions" />
+    <v-menu location="end">
+      <template #activator="activ">
+        <MoreIcon v-bind="activ.props" class="mr-2" @click="openTaskActions" />
+      </template>
+      <ActionsMenu />
+    </v-menu>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import MoreIcon from "./icons/MoreIcon.vue";
 import { useTasksStore } from "../stores/taskStore";
 import CheckboxCircle from "./icons/CheckboxCircle.vue";
+import MoreIcon from "./icons/MoreIcon.vue";
 
 interface Task {
   task: {
@@ -78,7 +87,7 @@ const toggleCompletion = () => {
 };
 </script>
 
-<style>
+<style scoped>
 .task-textarea {
   outline: none;
   width: 100%;
@@ -89,7 +98,6 @@ const toggleCompletion = () => {
   outline: none;
   width: 100%;
   padding: 8px 16px;
-  letter-spacing: 0.009375em;
 }
 .done-task {
   text-decoration: line-through;

@@ -1,5 +1,5 @@
 <template>
-  <svg-icon height="1rem" type="mdi" :path="path"></svg-icon>
+  <svg-icon class="icon" height="1rem" type="mdi" :path="path"></svg-icon>
 </template>
 
 <script>
@@ -17,3 +17,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.icon {
+  cursor: pointer;
+}
+</style>
