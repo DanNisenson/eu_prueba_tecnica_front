@@ -22,7 +22,7 @@
     <div v-else class="task-text" :class="props.task.completed && 'done-task'">
       {{ newTitle }}
     </div>
-    <!-- <TrashIcon class="mr-2" @click="tasksStore.deleteTask(props.task.uuid)" /> -->
+
     <TrashIcon class="mr-2" @click="isEditTitle = !isEditTitle" />
   </v-card>
 </template>
