@@ -63,7 +63,9 @@ interface Task {
 
 const tasksStore = useTasksStore();
 const props = withDefaults(defineProps<Task>(), {
-  task: { id: -1, uuid: "", title: "", color: "", completed: false },
+  task: () => {
+    return { id: -1, uuid: "", title: "", tag: "", completed: false };
+  },
 });
 // eslint-disable-next-line vue/no-setup-props-destructure
 let newTitle = props.task.title;
