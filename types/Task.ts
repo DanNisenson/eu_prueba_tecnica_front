@@ -2,6 +2,6 @@ export interface Task {
   id?: number;
   uuid?: string;
   title: string;
-  color: string;
+  tag: string;
   completed: boolean;
 }

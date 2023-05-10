@@ -5,6 +5,7 @@
       :checked="props.task.completed"
       @click="toggleCompletion"
     />
+
     <v-textarea
       v-if="isEditTitle"
       ref="textarea"
@@ -26,11 +27,16 @@
     >
       {{ newTitle }}
     </div>
+
     <v-menu location="end">
       <template #activator="activ">
         <MoreIcon v-bind="activ.props" class="mr-2" @click="openTaskActions" />
       </template>
-      <ActionsMenu :uuid="props.task.uuid" />
+      <ActionsMenu
+        :uuid="props.task.uuid"
+        :tag="props.task.tag"
+        @selectTag="setTag"
+      />
     </v-menu>
   </v-card>
 </template>
@@ -45,7 +51,7 @@ interface Task {
     id: number;
     uuid: string;
     title: string;
-    color: string;
+    tag: string;
     completed: boolean;
   };
 }
@@ -63,6 +69,10 @@ const openTaskActions = () => {
   isEditTitle.value = true;
   textarea.value.focus();
   textarea.value.select();
+};
+
+const setTag = (tag: string) => {
+  console.log(tag);
 };
 
 const handleEnter = () => {

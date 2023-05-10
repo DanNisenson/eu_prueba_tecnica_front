@@ -38,7 +38,7 @@ const opts = {
     async addTask(title: string) {
       const newTask = {
         title,
-        color: "white",
+        tag: "none",
         completed: false,
       };
 
