@@ -34,10 +34,6 @@ const opts = {
       this.tasks = tasks;
     },
 
-    resetDidFetchFail() {
-      this.didFetchFail = false;
-    },
-
     async addTask(title: string) {
       const newTask = {
         title,
@@ -82,17 +78,13 @@ const opts = {
     },
 
     async updateAllTasks(taskList: Task[]) {
-      console.log("patchreq", taskList);
       const uri = `http://localhost:8080/v1/task/all`;
       const config: UseFetchOptions = {
         method: "PATCH",
         body: taskList,
       };
 
-      const { data } = await useFetch(uri, config);
-      console.log("response", data.value);
-
-      // this.tasks = taskList;
+      const { error } = await useFetch(uri, config);
     },
   },
 };

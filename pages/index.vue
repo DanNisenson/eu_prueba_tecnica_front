@@ -9,7 +9,6 @@
       elevation="16"
     >
       <draggable
-        :key="cardKey"
         v-model="tasks"
         v-bind="dragOptions"
         :disabled="!enabled"
@@ -36,24 +35,15 @@
 </template>
 
 <script setup>
-import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
+import { storeToRefs } from "pinia";
 import { useTasksStore } from "../stores/taskStore";
 
 const tasksStore = useTasksStore();
-if (tasksStore.didFetchFail) {
-  setTimeout(() => {
-    tasksStore.resetDidFetchFail();
-  }, 5000);
-}
+
 tasksStore.getAllTasks();
-
-let cardKey = 0;
-
 const { tasks } = storeToRefs(tasksStore);
-console.log("first", tasks.value, "l");
 tasksStore.$subscribe((mutation, state) => {
-  console.log("subs", mutation, state);
   tasks.value = state.tasks;
 });
 
@@ -62,28 +52,8 @@ const drop = async () => {
   const taskList = tasks.value.map((task, i) => {
     return { ...task, id: i };
   });
-  // tasksStore.$patch({
-  //   tasks: taskList,
-  // });
-  // console.log("drop", taskList);
   await tasksStore.updateAllTasks(taskList);
 };
-
-// const tasks = computed({
-//   get() {
-//     console.log("get", tasksStore.tasks);
-//     return tasksStore.tasks;
-//   },
-//   set(taskList) {
-//     const listNewIds = taskList.map((task, i) => {
-//       return { ...task, id: i };
-//     });
-//     console.log("get", listNewIds);
-//     tasksStore.updateAllTasks(listNewIds);
-//   },
-// });
-
-const modTasks = tasks;
 
 const enabled = ref(true);
 const dragging = ref(false);
