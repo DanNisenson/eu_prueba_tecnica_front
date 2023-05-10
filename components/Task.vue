@@ -30,7 +30,7 @@
       <template #activator="activ">
         <MoreIcon v-bind="activ.props" class="mr-2" @click="openTaskActions" />
       </template>
-      <ActionsMenu />
+      <ActionsMenu :uuid="props.task.uuid" />
     </v-menu>
   </v-card>
 </template>
