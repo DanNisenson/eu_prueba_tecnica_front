@@ -2,15 +2,20 @@
   <v-card class="ml-4 d-flex flex-column text-body-2">
     <h4 class="ml-3 mt-2 mb-1">Tags</h4>
     <v-divider></v-divider>
-    <div class="ml-2 my-1 d-flex flex-column">
-      <div
-        v-for="(tag, index) in tags"
-        :key="tag"
-        class="pa-1 d-flex align-center pointer"
-      >
-        <div class="circle mr-2" :class="tags[index]"></div>
-        <div>{{ tags[index] }}</div>
-      </div>
+    <div class="mx-2 my-1 d-flex flex-column">
+      <v-btn-toggle v-model="selectedTag" class="d-flex flex-column h-100">
+        <div
+          v-for="(tag, index) in tags"
+          :key="tag"
+          class="pa-1 d-flex align-center rounded-pill pointer"
+          @click="selectTag(tag)"
+        >
+          <v-btn>
+            <div class="circle mr-2" :class="tags[index]"></div>
+            <div>{{ tags[index] }}</div>
+          </v-btn>
+        </div>
+      </v-btn-toggle>
     </div>
     <v-divider></v-divider>
     <div
@@ -28,14 +33,21 @@ import { useTasksStore } from "../stores/taskStore";
 import TrashIcon from "./icons/TrashIcon.vue";
 const tasksStore = useTasksStore();
 
-const props = defineProps(["uuid"]);
+const tags = ["none", "red", "yellow", "green"];
+const props = defineProps(["uuid", "tag"]);
 
-const tags = ["none", "red", "yellow", "green", "blue"];
+const emit = defineEmits(["selectTag"]);
+const selectTag = (tag) => {
+  emit("selectTag", tag);
+};
 </script>
 
 <style scoped>
 .pointer {
   cursor: pointer;
+}
+.selected {
+  background-color: #80a1d4;
 }
 .circle {
   border-radius: 50%;
