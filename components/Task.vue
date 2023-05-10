@@ -6,7 +6,7 @@
     <CheckboxCircle
       class="checkbox"
       :checked="props.task.completed"
-      @click="toggleCompletion"
+      @click="updateTask(`completed`)"
     />
 
     <v-textarea
@@ -22,7 +22,7 @@
       auto-grow
       hide-details
       autofocus
-      @blur="titleChange"
+      @blur="handleBlur"
       @keydown.enter="handleEnter"
     ></v-textarea>
     <div v-else class="task-text" :class="props.task.completed && 'done-task'">
@@ -40,7 +40,7 @@
       <ActionsMenu
         :uuid="props.task.uuid"
         :tag="props.task.tag"
-        @set-tag="setTag"
+        @set-tag="(tag) => updateTask(`tag`, tag)"
       />
     </v-menu>
   </v-card>
@@ -50,6 +50,7 @@
 import { useTasksStore } from "../stores/taskStore";
 import CheckboxCircle from "./icons/CheckboxCircle.vue";
 import MoreIcon from "./icons/MoreIcon.vue";
+import { TaskEnum } from "~/types/taskTypes";
 
 interface Task {
   task: {
@@ -72,32 +73,25 @@ let newTitle = props.task.title;
 const textarea = ref();
 const isEditTitle = ref(false);
 
-const setTag = (tag: string) => {
-  const task = {
-    ...props.task,
-    tag: tag,
-  };
-  tasksStore.updateTask(task);
-};
-
 const handleEnter = () => {
   textarea.value.blur();
-  titleChange();
+  handleBlur();
 };
 
-const titleChange = () => {
+const handleBlur = () => {
   isEditTitle.value = false;
-  const newTask = {
-    ...props.task,
-    title: newTitle,
-  };
-  tasksStore.updateTask(newTask);
+  updateTask(`title`, newTitle);
 };
 
-const toggleCompletion = () => {
+const updateTask = (field: string, value?: string) => {
   const newTask = {
     ...props.task,
-    completed: !props.task.completed,
+    title: field === TaskEnum.TITLE ? (value as string) : props.task.title,
+    tag: field === TaskEnum.TAG ? (value as string) : props.task.tag,
+    completed:
+      field === TaskEnum.COMPLETED
+        ? !props.task.completed
+        : props.task.completed,
   };
   tasksStore.updateTask(newTask);
 };
