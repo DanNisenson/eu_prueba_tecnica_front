@@ -1,5 +1,8 @@
 <template>
-  <v-card class="d-flex align-center justify-space-between mt-1">
+  <v-card
+    class="d-flex align-center justify-space-between mt-1 transition"
+    :class="isEditTitle ? 'make-big' : null"
+  >
     <CheckboxCircle
       class="checkbox"
       :checked="props.task.completed"
@@ -10,7 +13,7 @@
       v-if="isEditTitle"
       ref="textarea"
       v-model="newTitle"
-      class="task-textarea"
+      class="w-100"
       :class="props.task.completed && 'done-task'"
       bg-color="transparent"
       variant="solo"
@@ -18,20 +21,21 @@
       rows="1"
       auto-grow
       hide-details
+      autofocus
       @blur="titleChange"
       @keydown.enter="handleEnter"
     ></v-textarea>
-    <div
-      v-else
-      class="task-text text-body-1"
-      :class="props.task.completed && 'done-task'"
-    >
+    <div v-else class="task-text" :class="props.task.completed && 'done-task'">
       {{ newTitle }}
     </div>
     <div class="circle mr-2" :class="props.task.tag"></div>
     <v-menu location="end">
       <template #activator="activ">
-        <MoreIcon v-bind="activ.props" class="mr-2" @click="openTaskActions" />
+        <MoreIcon
+          v-bind="activ.props"
+          class="mr-2"
+          @click="isEditTitle = true"
+        />
       </template>
       <ActionsMenu
         :uuid="props.task.uuid"
@@ -66,12 +70,6 @@ let newTitle = props.task.title;
 const textarea = ref();
 const isEditTitle = ref(false);
 
-const openTaskActions = () => {
-  isEditTitle.value = true;
-  textarea.value.focus();
-  textarea.value.select();
-};
-
 const setTag = (tag: string) => {
   const task = {
     ...props.task,
@@ -86,6 +84,7 @@ const handleEnter = () => {
 };
 
 const titleChange = () => {
+  isEditTitle.value = false;
   const newTask = {
     ...props.task,
     title: newTitle,
@@ -103,16 +102,19 @@ const toggleCompletion = () => {
 </script>
 
 <style scoped>
-.task-textarea {
-  outline: none;
-  width: 100%;
-}
 .task-text {
   user-select: none;
   cursor: pointer;
   outline: none;
   width: 100%;
   padding: 8px 16px;
+  letter-spacing: 0.009375em;
+}
+.transition {
+  transition: all 0.4s ease-in-out;
+}
+.make-big {
+  transform: scale(1.02);
 }
 .done-task {
   text-decoration: line-through;
