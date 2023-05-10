@@ -1,15 +1,5 @@
 import { defineStore } from "pinia";
-import { Task } from "~/types/Task";
-
-interface State {
-  tasks: Task[];
-  didFetchFail: string;
-}
-
-interface UseFetchOptions {
-  method?: string;
-  body?: Task | Task[];
-}
+import { Task, State, UseFetchOptions } from "~/types/storeTypes";
 
 const opts = {
   state: (): State => {
