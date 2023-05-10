@@ -81,7 +81,7 @@ const opts = {
       const { data, error } = await useFetch(uri, config);
       if (error.value) {
         const msg =
-          "There's been a problem updating your task. Check your internet connection.";
+          "There's been a problem updating your task. Check your internet connection. Or maybe you just changed stuff around really fast. Please be gentle. I'm not a robot. I swear.";
         this.setFailAlert(msg);
         return;
       }
@@ -109,6 +109,9 @@ const opts = {
 
     setFailAlert(msg: string) {
       this.didFetchFail = msg;
+      setTimeout(() => {
+        this.didFetchFail = "";
+      }, 4000);
     },
   },
 };
