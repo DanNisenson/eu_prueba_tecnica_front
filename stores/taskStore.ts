@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
-import { Task, State, UseFetchOptions } from "~/types/storeTypes";
+import ApiHelp from "~/helpers/apiHelp";
+import { Task, State } from "~/types/storeTypes";
 
 export const useTasksStore = defineStore("tasks", {
   state: (): State => {
@@ -11,12 +12,10 @@ export const useTasksStore = defineStore("tasks", {
 
   actions: {
     async getAllTasks() {
-      const uri = "http://localhost:8080/v1/task/all";
-      const { data, error } = await useFetch(uri);
+      const slug = `/task/all`;
+      const { data, error } = await ApiHelp.makeReq(slug, "GET");
       if (error.value) {
-        const msg =
-          "There's been a problem fetching your tasks. Make sure you're connected to the internet.";
-        this.setFailAlert(msg);
+        this.setFailAlert(ApiHelp.errMsg("fetching"));
         return;
       }
 
@@ -26,24 +25,17 @@ export const useTasksStore = defineStore("tasks", {
     },
 
     async addTask(title: string) {
+      const slug = `/task`;
       const newTask = {
         id: 0,
         uuid: "",
         title,
-        tag: "none",
+        tag: `none`,
         completed: false,
       };
-
-      const config: UseFetchOptions = {
-        method: "POST",
-        body: newTask,
-      };
-
-      const uri = "http://localhost:8080/v1/task";
-      const { data, error } = await useFetch(uri, config);
+      const { data, error } = await ApiHelp.makeReq(slug, "POST", newTask);
       if (error.value) {
-        const msg = "There's been a problem adding your task.";
-        this.setFailAlert(msg);
+        this.setFailAlert(ApiHelp.errMsg("adding"));
         return;
       }
 
@@ -51,15 +43,10 @@ export const useTasksStore = defineStore("tasks", {
     },
 
     async deleteTask(uuid: string) {
-      const uri = `http://localhost:8080/v1/task/${uuid}`;
-      const config: UseFetchOptions = {
-        method: "DELETE",
-      };
-
-      const { error } = await useFetch(uri, config);
+      const slug = `/task/${uuid}`;
+      const { error } = await ApiHelp.makeReq(slug, "DELETE");
       if (error.value) {
-        const msg = "There's been a problem deleting your task.";
-        this.setFailAlert(msg);
+        this.setFailAlert(ApiHelp.errMsg("deleting"));
         return;
       }
 
@@ -67,17 +54,11 @@ export const useTasksStore = defineStore("tasks", {
     },
 
     async updateTask(task: Task) {
-      const uri = `http://localhost:8080/v1/task/`;
-      const config: UseFetchOptions = {
-        method: "PATCH",
-        body: task,
-      };
-
-      const { data, error } = await useFetch(uri, config);
+      const slug = `/task`;
+      const { data, error } = await ApiHelp.makeReq(slug, "PATCH", task);
       if (error.value) {
-        const msg =
-          "There's been a problem updating your task. Check your internet connection. Or maybe you just changed stuff around really fast. Please be gentle. I'm not a robot. I swear.";
-        this.setFailAlert(msg);
+        const addMsg = `Or maybe you just changed stuff around really fast. Please be gentle. I'm not a robot. I swear.`;
+        this.setFailAlert(ApiHelp.errMsg("updating") + addMsg);
         return;
       }
 
@@ -87,17 +68,10 @@ export const useTasksStore = defineStore("tasks", {
     },
 
     async updateAllTasks(taskList: Task[]) {
-      const uri = `http://localhost:8080/v1/task/all`;
-      const config: UseFetchOptions = {
-        method: "PATCH",
-        body: taskList,
-      };
-
-      const { error } = await useFetch(uri, config);
+      const slug = `/task/all`;
+      const { error } = await ApiHelp.makeReq(slug, "PATCH", taskList);
       if (error.value) {
-        const msg =
-          "There's been a problem updating your tasks. Check your internet connection.";
-        this.setFailAlert(msg);
+        this.setFailAlert(ApiHelp.errMsg("updating"));
         return;
       }
     },
@@ -106,7 +80,7 @@ export const useTasksStore = defineStore("tasks", {
       this.didFetchFail = msg;
       setTimeout(() => {
         this.didFetchFail = "";
-      }, 4000);
+      }, 6000);
     },
   },
 });
