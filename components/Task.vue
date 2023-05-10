@@ -1,23 +1,29 @@
 <template>
-  <v-card class="d-flex align-center justify-space-between py-2 mt-1">
+  <v-card class="d-flex align-center justify-space-between mt-1">
     <CheckboxCircle
       class="checkbox"
       :checked="props.task.completed"
       @click="toggleCompletion"
     />
-    <textarea
+    <v-textarea
+      v-if="isEditTitle"
       ref="input"
       v-model="newTitle"
-      class="input"
-      :class="props.task.completed && 'text-decoration-line-through'"
-      resize="false"
-      readonly
+      class="task-textarea"
+      :class="props.task.completed && 'done-task'"
+      variant="solo"
+      density="compact"
+      rows="1"
+      auto-grow
+      hide-details
       @blur="titleChange"
       @keydown.enter="handleEnter"
-      @dblclick="editTitle"
-      @input="autoResize"
-    ></textarea>
-    <TrashIcon class="mr-2" @click="tasksStore.deleteTask(props.task.uuid)" />
+    ></v-textarea>
+    <div v-else class="task-text" :class="props.task.completed && 'done-task'">
+      {{ newTitle }}
+    </div>
+    <!-- <TrashIcon class="mr-2" @click="tasksStore.deleteTask(props.task.uuid)" /> -->
+    <TrashIcon class="mr-2" @click="isEditTitle = !isEditTitle" />
   </v-card>
 </template>
 
@@ -43,12 +49,7 @@ const props = withDefaults(defineProps<Task>(), {
 // eslint-disable-next-line vue/no-setup-props-destructure
 let newTitle = props.task.title;
 const input = ref();
-const isEditTitle = ref(true);
-
-function autoResize() {
-  input.value.style.height = "auto";
-  input.value.style.height = input.value.scrollHeight + "px";
-}
+const isEditTitle = ref(false);
 
 const editTitle = () => {
   isEditTitle.value = !isEditTitle.value;
@@ -77,12 +78,19 @@ const toggleCompletion = () => {
 </script>
 
 <style>
-.input {
+.task-textarea {
+  outline: none;
+  width: 100%;
+}
+.task-text {
   user-select: none;
   cursor: pointer;
   outline: none;
   width: 100%;
-  resize: none;
-  height: 1.5rem;
+  padding: 8px 16px;
+  letter-spacing: 0.009375em;
+}
+.done-task {
+  text-decoration: line-through;
 }
 </style>
