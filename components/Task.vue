@@ -1,6 +1,6 @@
 <template>
   <v-card
-    class="d-flex align-center justify-space-between mt-1 transition"
+    class="d-flex align-center justify-space-between mt-1 transition min-h-3"
     :class="isEditTitle ? 'make-big' : null"
   >
     <CheckboxCircle
@@ -118,6 +118,9 @@ const toggleCompletion = () => {
 }
 .done-task {
   text-decoration: line-through;
+}
+.min-h-3 {
+  min-height: 3rem;
 }
 .circle {
   border-radius: 100%;
