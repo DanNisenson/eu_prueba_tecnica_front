@@ -12,6 +12,7 @@
     bg-color="grey-lighten-2"
     auto-grow
     no-resize
+    autofocus
     @keyup.enter="handlePrimaryAction"
   ></v-textarea>
   <v-btn
