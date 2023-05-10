@@ -8,7 +8,7 @@ interface State {
 
 interface UseFetchOptions {
   method?: string;
-  body?: Task;
+  body?: Task | Task[];
 }
 
 const opts = {
@@ -21,15 +21,16 @@ const opts = {
 
   actions: {
     async getAllTasks() {
-      const uri = "http://localhost:8080/v1/task";
+      const uri = "http://localhost:8080/v1/task/all";
       const { data } = await useFetch(uri);
 
-      if (data.value === null) {
+      if (!data.value) {
         this.didFetchFail = true;
         return;
       }
 
       const tasks = data.value;
+      tasks.sort((a: Task, b: Task) => a.id - b.id);
       this.tasks = tasks;
     },
 
@@ -78,6 +79,20 @@ const opts = {
       this.tasks = this.tasks.map((t: Task) =>
         t.uuid === task.uuid ? data.value : t
       );
+    },
+
+    async updateAllTasks(taskList: Task[]) {
+      console.log("patchreq", taskList);
+      const uri = `http://localhost:8080/v1/task/all`;
+      const config: UseFetchOptions = {
+        method: "PATCH",
+        body: taskList,
+      };
+
+      const { data } = await useFetch(uri, config);
+      console.log("response", data.value);
+
+      // this.tasks = taskList;
     },
   },
 };
