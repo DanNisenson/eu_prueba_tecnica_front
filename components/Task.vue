@@ -12,6 +12,7 @@
       v-model="newTitle"
       class="task-textarea"
       :class="props.task.completed && 'done-task'"
+      bg-color="transparent"
       variant="solo"
       density="compact"
       rows="1"
@@ -27,7 +28,7 @@
     >
       {{ newTitle }}
     </div>
-
+    <div class="circle mr-2" :class="props.task.tag"></div>
     <v-menu location="end">
       <template #activator="activ">
         <MoreIcon v-bind="activ.props" class="mr-2" @click="openTaskActions" />
@@ -35,7 +36,7 @@
       <ActionsMenu
         :uuid="props.task.uuid"
         :tag="props.task.tag"
-        @selectTag="setTag"
+        @set-tag="setTag"
       />
     </v-menu>
   </v-card>
@@ -72,7 +73,11 @@ const openTaskActions = () => {
 };
 
 const setTag = (tag: string) => {
-  console.log(tag);
+  const task = {
+    ...props.task,
+    tag: tag,
+  };
+  tasksStore.updateTask(task);
 };
 
 const handleEnter = () => {
@@ -111,5 +116,26 @@ const toggleCompletion = () => {
 }
 .done-task {
   text-decoration: line-through;
+}
+.circle {
+  border-radius: 100%;
+  min-height: 1rem;
+  min-width: 1rem;
+  cursor: pointer;
+}
+.none {
+  background-color: transparent;
+}
+.red {
+  background-color: #f7b2bd;
+}
+.yellow {
+  background-color: #f2c57c;
+}
+.green {
+  background-color: #cde7be;
+}
+.blue {
+  background-color: #80a1d4;
 }
 </style>
