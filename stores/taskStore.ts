@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { Task, State, UseFetchOptions } from "~/types/storeTypes";
 
-const opts = {
+export const useTasksStore = defineStore("tasks", {
   state: (): State => {
     return {
       tasks: [],
@@ -20,13 +20,15 @@ const opts = {
         return;
       }
 
-      const tasks = data.value;
+      const tasks = data.value as Task[];
       tasks.sort((a: Task, b: Task) => a.id - b.id);
       this.tasks = tasks;
     },
 
     async addTask(title: string) {
       const newTask = {
+        id: 0,
+        uuid: "",
         title,
         tag: "none",
         completed: false,
@@ -39,9 +41,13 @@ const opts = {
 
       const uri = "http://localhost:8080/v1/task";
       const { data, error } = await useFetch(uri, config);
-      if (error) this.didFetchFail = true;
+      if (error.value) {
+        const msg = "There's been a problem adding your task.";
+        this.setFailAlert(msg);
+        return;
+      }
 
-      this.tasks = [...this.tasks, data.value];
+      this.tasks = [...this.tasks, data.value as Task];
     },
 
     async deleteTask(uuid: string) {
@@ -52,8 +58,7 @@ const opts = {
 
       const { error } = await useFetch(uri, config);
       if (error.value) {
-        const msg =
-          "There's been a problem deleting your task. Check your internet connection.";
+        const msg = "There's been a problem deleting your task.";
         this.setFailAlert(msg);
         return;
       }
@@ -77,7 +82,7 @@ const opts = {
       }
 
       this.tasks = this.tasks.map((t: Task) =>
-        t.uuid === task.uuid ? data.value : t
+        t.uuid === task.uuid ? (data.value as Task) : t
       );
     },
 
@@ -104,6 +109,4 @@ const opts = {
       }, 4000);
     },
   },
-};
-
-export const useTasksStore = defineStore("tasks", opts);
+});
