@@ -27,16 +27,21 @@
   </v-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useTasksStore } from "../stores/taskStore";
 import TrashIcon from "./icons/TrashIcon.vue";
 const tasksStore = useTasksStore();
 
+type These = {
+  uuid: string;
+  tag: string;
+};
+
 const tags = ["none", "red", "yellow", "green"];
-const props = defineProps(["uuid", "tag"]);
+const props = defineProps<These>();
 
 const emit = defineEmits(["set-tag"]);
-const setTag = (tag) => {
+const setTag = (tag: string) => {
   emit("set-tag", tag);
 };
 </script>
